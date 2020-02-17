@@ -70,23 +70,32 @@ def clouds(x_clouds, y_clouds, height_clouds, width_to_height_ratio_clouds):
     penSize(1)
     brushColor('white')
 
-    i = 0
     x = x_clouds
     y = y_clouds
     h = height_clouds
     w = height_clouds * width_to_height_ratio_clouds
-    while i < 3: 
-        oval(x, y, x + w, y + h)
-        x += w / 2
-        i += 1    
+    clouds = []
 
-    i = 0
+    for i in range(3): 
+        cloud = oval(x, y, x + w, y + h)
+        clouds.append(cloud)
+        x += w / 2
+
     x = x_clouds - w / 4
     y = y_clouds + h / 2
-    while i < 4: 
-        oval(x, y, x + w, y + h)
+    
+    for i in range(4): 
+        cloud = oval(x, y, x + w, y + h)
+        clouds.append(cloud)
         x += w / 2
-        i += 1    
+
+    # clouds' animation
+    def update():
+        for i in range(len(clouds)):
+            x_new, y_new = coords(clouds[i])[0] + 1, coords(clouds[i])[1] + 1
+            moveObjectTo(clouds[i], x_new + 1, y_new)
+
+    onTimer(update, 50)
 
 def boat(x_boat, y_boat, height_boat):
     """Draw boat
@@ -97,35 +106,53 @@ def boat(x_boat, y_boat, height_boat):
     penSize(1)
     brushColor('brown')
     
-    arc(x_boat, y_boat - height_boat, 
-        x_boat + height_boat * 2, y_boat + height_boat, 
-        180, 270, 'pieslice')
-    rectangle(x_boat + height_boat, y_boat, 
-        x_boat + height_boat * 5, y_boat + height_boat)
-    polygon([(x_boat + height_boat * 5, y_boat), 
-        (x_boat + height_boat * 7, y_boat), 
-        (x_boat + height_boat * 5, y_boat + height_boat), 
-        (x_boat + height_boat * 5, y_boat)])
+    bow_boat = arc(x_boat, y_boat - height_boat, 
+                            x_boat + height_boat * 2, y_boat + height_boat, 
+                            180, 270, 'pieslice')
+    hull_boat = rectangle(x_boat + height_boat, y_boat, 
+                            x_boat + height_boat * 5, y_boat + height_boat)
+    feed_boat = polygon([(x_boat + height_boat * 5, y_boat), 
+                            (x_boat + height_boat * 7, y_boat), 
+                            (x_boat + height_boat * 5, y_boat + height_boat), 
+                            (x_boat + height_boat * 5, y_boat)])
+    # boat.append(bow_boat)
+    # boat.append(hull_boat)
+    # boat.append(feed_boat)
 
     penSize(3)
     brushColor('white')
-    circle(x_boat + height_boat * 5.5, y_boat + height_boat / 2.6, 
-        height_boat / 4)
+    
+    porthole_boat = circle(x_boat + height_boat * 5.5, y_boat + height_boat / 2.6, 
+                            height_boat / 4)
+    # boat.append(porthole_boat)
 
     penSize(1)
     brushColor('black')
-    rectangle(x_boat + height_boat * 2, y_boat, 
-        x_boat + height_boat * 2 + height_boat / 5, y_boat - height_boat * 4)
+    
+    mast_boat = rectangle(x_boat + height_boat * 2, y_boat, 
+                            x_boat + height_boat * 2 + height_boat / 5, y_boat - height_boat * 4)
+    # boat.append(mast_boat)
 
     brushColor('white')
-    polygon([(x_boat + height_boat * 2 + height_boat / 5, y_boat - height_boat * 4), 
-        (x_boat + height_boat * 7, y_boat - height_boat * 2), 
-        (x_boat + height_boat * 3, y_boat - height_boat * 2), 
-        (x_boat + height_boat * 2 + height_boat / 5, y_boat - height_boat * 4)])
-    polygon([(x_boat + height_boat * 2 + height_boat / 5, y_boat), 
-        (x_boat + height_boat * 7, y_boat - height_boat * 2), 
-        (x_boat + height_boat * 3, y_boat - height_boat * 2), 
-        (x_boat + height_boat * 2 + height_boat / 5, y_boat)])
+
+    sail_1_boat = polygon([(x_boat + height_boat * 2 + height_boat / 5, y_boat - height_boat * 4), 
+                            (x_boat + height_boat * 7, y_boat - height_boat * 2), 
+                            (x_boat + height_boat * 3, y_boat - height_boat * 2), 
+                            (x_boat + height_boat * 2 + height_boat / 5, y_boat - height_boat * 4)])
+    sail_2_boat = polygon([(x_boat + height_boat * 2 + height_boat / 5, y_boat), 
+                            (x_boat + height_boat * 7, y_boat - height_boat * 2), 
+                            (x_boat + height_boat * 3, y_boat - height_boat * 2), 
+                            (x_boat + height_boat * 2 + height_boat / 5, y_boat)])
+    # boat.append(sail_1_boat)
+    # boat.append(sail_2_boat)
+
+    # boat's animation
+    def update():
+        for i in range(len(boat)):
+            x_new, y_new = coords(boat[i])[0] + 1, coords(boat[i])[1] + 1
+            moveObjectTo(boat[i], x_new + 1, y_new)
+    
+    # onTimer(update, 50)
 
 def sunshade(x_sunshade, y_sunshade, height_sunshade):
     """Draw sunshade"""
@@ -140,25 +167,21 @@ def sunshade(x_sunshade, y_sunshade, height_sunshade):
     penSize(1)
     brushColor('brown')
 
-    i = 0
     x = height_sunshade // 6 * 4
-    while i < 4:
+    for i in range(4):
         polygon([(x_sunshade, y_sunshade - height_sunshade),
             (x_sunshade, y_sunshade - height_sunshade + height_sunshade // 5), 
             (x_sunshade - x, y_sunshade - height_sunshade + height_sunshade // 5),
             (x_sunshade, y_sunshade - height_sunshade)])
         x -= height_sunshade // 6
-        i += 1
 
-    i = 0
     x = height_sunshade // 6 * 4
-    while i < 4:
+    for i in range(4):
         polygon([(x_sunshade + height_sunshade // 20, y_sunshade - height_sunshade), 
             (x_sunshade  + height_sunshade // 20, y_sunshade - height_sunshade + height_sunshade // 5), 
             (x_sunshade + height_sunshade // 20 + x, y_sunshade - height_sunshade + height_sunshade // 5), 
             (x_sunshade + height_sunshade // 20, y_sunshade - height_sunshade)])
         x -= height_sunshade // 6
-        i += 1
 
 def sun(x0, y0, r):
     """Draw sun"""
